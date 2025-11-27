@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2E86AB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1B5E20;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="centerGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E8F5E8;stop-opacity:1" />
+    </radialGradient>
+    <linearGradient id="beatGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F7931E;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle with medical blue-green gradient -->
+  <circle cx="256" cy="256" r="240" fill="url(#backgroundGradient)" stroke="#1A4C96" stroke-width="8"/>
+  
+  <!-- Inner circle representing therapy focus -->
+  <circle cx="256" cy="256" r="170" fill="url(#centerGradient)" stroke="#4CAF50" stroke-width="4" opacity="0.9"/>
+  
+  <!-- RAS rhythm pulses - concentric circles representing synchronized beats -->
+  <circle cx="256" cy="256" r="130" fill="none" stroke="#4CAF50" stroke-width="6" opacity="0.6"/>
+  <circle cx="256" cy="256" r="100" fill="none" stroke="#4CAF50" stroke-width="4" opacity="0.4"/>
+  <circle cx="256" cy="256" r="70" fill="none" stroke="#4CAF50" stroke-width="4" opacity="0.3"/>
+  
+  <!-- Central medical cross with rounded ends -->
+  <rect x="236" y="216" width="40" height="80" rx="20" ry="20" fill="#2E86AB"/>
+  <rect x="216" y="236" width="80" height="40" rx="20" ry="20" fill="#2E86AB"/>
+  
+  <!-- Beat indicators - circles of varying sizes around center representing rhythm synchronization -->
+  <!-- Main beat at 12 o'clock -->
+  <circle cx="256" cy="176" r="12" fill="url(#beatGradient)" opacity="1.0"/>
+  
+  <!-- Secondary beats -->
+  <circle cx="316" cy="196" r="8" fill="url(#beatGradient)" opacity="0.8"/>
+  <circle cx="196" cy="196" r="8" fill="url(#beatGradient)" opacity="0.8"/>
+  
+  <!-- Tertiary beats at 3 and 9 o'clock -->
+  <circle cx="336" cy="256" r="10" fill="url(#beatGradient)" opacity="0.7"/>
+  <circle cx="176" cy="256" r="10" fill="url(#beatGradient)" opacity="0.7"/>
+  
+  <!-- Additional beat indicators at 4:30 and 7:30 positions -->
+  <circle cx="316" cy="316" r="6" fill="url(#beatGradient)" opacity="0.6"/>
+  <circle cx="196" cy="316" r="6" fill="url(#beatGradient)" opacity="0.6"/>
+  
+  <!-- More beat indicators at 1:30 and 10:30 positions -->
+  <circle cx="296" cy="206" r="6" fill="url(#beatGradient)" opacity="0.5"/>
+  <circle cx="216" cy="206" r="6" fill="url(#beatGradient)" opacity="0.5"/>
+  
+  <!-- Bottom beat indicators at 5 and 7 o'clock -->
+  <circle cx="286" cy="350" r="8" fill="url(#beatGradient)" opacity="0.6"/>
+  <circle cx="226" cy="350" r="8" fill="url(#beatGradient)" opacity="0.6"/>
+  
+  <!-- Small accent beats -->
+  <circle cx="256" cy="350" r="4" fill="url(#beatGradient)" opacity="0.4"/>
+  <circle cx="350" cy="286" r="4" fill="url(#beatGradient)" opacity="0.4"/>
+  <circle cx="162" cy="286" r="4" fill="url(#beatGradient)" opacity="0.4"/>
+  <circle cx="350" cy="226" r="4" fill="url(#beatGradient)" opacity="0.4"/>
+  <circle cx="162" cy="226" r="4" fill="url(#beatGradient)" opacity="0.4"/>
+  
+  <!-- RAS therapy text indicator (subtle) -->
+  <text x="256" y="400" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#2E86AB" opacity="0.7">RAS</text>
+  
+  <!-- Simplified waveform representing rhythm analysis -->
+  <path d="M 140 370 Q 170 360 200 370 Q 230 380 260 370 Q 290 360 320 370 Q 350 380 372 370" 
+        stroke="#4CAF50" stroke-width="4" fill="none" opacity="0.5"/>
+</svg> 
