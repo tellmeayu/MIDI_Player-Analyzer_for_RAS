@@ -11,6 +11,8 @@ This project is a specialized platform designed to support clinicians working wi
 - **RAS Therapy Tools**: Direct cadence control (20-180 steps/min), unified downbeat cueing, and clinical gait training optimization
 - **Advanced Architecture**: SQLite caching, atomic IPC, CLI automation, and cross-platform compatibility
 
+A more detailed document: https://www.sylviastudio.cn/overview-ras-player/
+
 ---
 
 ***Author's notes*** 
