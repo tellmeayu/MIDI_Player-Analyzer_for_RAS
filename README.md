@@ -16,7 +16,7 @@ A more detailed document: https://www.sylviastudio.cn/overview-ras-player/
 ---
 
 ***Author's notes*** 
-*The RAS MIDI Player/Analyzer is the refined successor to an ambitious initial concept. The initial motivation came from my basic training in Neurologic Music Therapy last year(2024). My first idea was to simulate a complete RAS therapy session, including gait detection via cutting-edge computer vision technology like MediaPipe Pose. However, given the technical complexity and resource limitation of a solo developer, I made the strategic decision to narrow down the scope. This allows me to focus on my own major and allocate all development efforts toward mastering the platform's rhythm analysis core.*
+*The RAS MIDI Player/Analyzer is the refined successor to an ambitious initial concept. The initial motivation came from my basic training in Neurologic Music Therapy last year(2024). My first idea was to simulate a complete RAS therapy session, including gait detection via cutting-edge computer vision technology like MediaPipe Pose (https://github.com/tellmeayu/RAS-helper.git). However, given the technical complexity and resource limitation of a solo developer, I made the strategic decision to narrow down the scope. This allows me to focus on my own major and allocate all development efforts toward mastering the platform's rhythm analysis core.*
 
 ---
 
