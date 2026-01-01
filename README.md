@@ -1,5 +1,23 @@
 **Project Description**
-
+<table>
+  <tr>
+    <td style="width: 33.3%;">
+      <img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-19.21.57.png" alt="4-dim framework demo" style="width: 100%; border-radius: 8px;">
+      <br>
+      <b>4-dim analysis visualization</b>
+    </td>
+    <td style="width: 33.3%;">
+      <img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-16.55.43.png" alt="Batch Processing" style="width: 100%; border-radius: 8px;">
+      <br>
+      <b>Batch Processing window</b>
+    </td>
+    <td style="width: 33.3%;">
+      <img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-21.14.09.png" alt="Radar Chart" style="width: 100%; border-radius: 8px;">
+      <br>
+      <b>main player window</b>
+    </td>
+  </tr>
+</table>
 This project is a specialized platform designed to support clinicians working with Rhythmic Auditory Stimulation (RAS) therapy for gait rehabilitation. RAS is mainly applied as an alternative rehab method for patients with Parkinson's disease, stroke, and other movement disorders. At its heart, the system tackles a fundamental challenge in music therapy: identifying which pieces of music are actually suitable for therapeutic use. While any MIDI player can produce sound, this platform goes deeper by analyzing the rhythmic structure of music across multiple dimensions, including beat density, predictability, accent patterns, and rhythmic uniformity. This is expected to help therapists understand whether a piece will support or hinder motor entrainment. To categorize music into clinically meaningful groups (duple vs. triple meter), a dual-layer meter classification system was designed. It uses both MIDI pattern analysis and neural network-based audio processing (RNN+DBN). Beyond analysis, the platform provides microsecond-accurate playback with an integrated therapy metronome that can be precisely synchronized to music, supporting cadences from 20 to 180 for gait training. Smart timing correction is another small tool which handles common MIDI quantization error (shifting from meter grid). The interface remains deliberately simple—resembling a straightforward MIDI player—but surfaces sophisticated features only when needed.
 
 **Key Features**
@@ -11,12 +29,7 @@ This project is a specialized platform designed to support clinicians working wi
 - **RAS Therapy Tools**: Direct cadence control (20-180 steps/min), unified downbeat cueing, and clinical gait training optimization
 - **Advanced Architecture**: SQLite caching, atomic IPC, CLI automation, and cross-platform compatibility
 
-A more detailed document: https://www.sylviastudio.cn/overview-ras-player/
-
----
-
-***Author's notes*** 
-*This project is a refined successor to an ambitious early concept. The initial motivation came from my basic training in Neurologic Music Therapy last year(2024). My first idea was to simulate a complete RAS therapy session, including gait detection via cutting-edge computer vision technology like MediaPipe Pose (https://github.com/tellmeayu/RAS-helper.git). However, given the technical complexity and resource limitation of a solo developer, I made the strategic decision to narrow down the scope. This allows me to focus on my own major and allocate all development efforts toward mastering the platform's rhythm analysis core.*
+Full description (with algorithm explanation that utilized in 4-dim framework): https://www.sylviastudio.cn/overview-ras-player/
 
 ---
 
@@ -51,7 +64,6 @@ The goal of meter estimation here is not to "guess" the time signature, but to r
 <figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/deep-mode-results-1.png" width="450"></figure>
 
 ### 4-dim Rhythm Analyzer with Radar Chart Visualization
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-19.21.57.png" width="400"></figure>
 
 The 4-D analysis result is visualized on a Radar Chart (with randomly assigned colors). This visualization allows for immediate, comparative assessment of the music's rhythmic profile.
 For instance, Debussy's *Clair de Lune* serves as an extreme example. Its low Predictability score suggests that the rhythm is likely too ambiguous for a listener to reliably tap or walk along with:
@@ -146,35 +158,7 @@ src/
     ├── audio_player_window.py        # Audio player interface
     └── beat_tracking_worker.py       # Beat tracking background worker
 ```
+---
 
-### Core Components
-#### 1. **Playback Engine (`src/core/`)**
-- **MidiEngine**: Singleton FluidSynth-based MIDI synthesis with thread-safe audio management
-- **Precision Timer**: Performance counter-based timing system achieving ±0.1ms accuracy
-- **Event Scheduler**: Real-time MIDI event processing with timing offset correction
-- **RAS Metronome**: Clinical-grade metronome with unified downbeat cueing for therapy sessions
-
-#### 2. **Analysis Framework (`src/analysis/`)**
-- **AnacrusisDetector**: Pattern-based downbeat detection using madmom RNN analysis
-- **MidiBeatTracker**: Audio synthesis-based beat tracking with tempo estimation
-- **Preprocessor**: MIDI file preparation pipeline (loading, merging, trimming, synthesis)
-
-#### 3. **Batch Processing System (`src/batch_filter/`)**
-- **Process Isolation**: Independent subprocess execution preventing UI blocking
-- **Dual-Layer Classification**: 
-  - MIDI-based tempogram analysis for fast duple/triple feel detection
-  - Audio-synthesized madmom RNN analysis for precise meter estimation
-- **SQLite Caching**: Persistent result storage with MD5-based cache validation
-- **CLI Automation**: Headless batch processing with JSON IPC and progress reporting
-
-#### 4. **4D Rhythm Analysis (`src/multi_dim_analyzer/`)**
-- **AnalysisPipeline**: Orchestrates four-dimensional rhythm quantification
-- **Dimension I - Beat Density**: Notes-per-beat ratio analysis using sigmoid normalization
-- **Dimension II - Predictability**: Metrical conformance via syncopation indexing
-- **Dimension III - Beat Salience**: Perceptual prominence of beat positions
-- **Dimension IV - Rhythmic Uniformity**: Inter-onset interval consistency analysis
-
-#### 5. **User Interface (`src/ui/`)**
-- **Main Player Window**: Real-time playback controls with RAS therapy interface
-- **Batch Analyzer Window**: Independent QMainWindow for large-scale MIDI processing
-- **Tool Windows**: Detached analysis tools with IPC-based result communication
+***Author's notes*** 
+*This project is a refined successor to an ambitious early concept. The initial motivation came from my basic training in Neurologic Music Therapy last year(2024). My first idea was to simulate a complete RAS therapy session, including gait detection via cutting-edge computer vision technology like MediaPipe Pose (https://github.com/tellmeayu/RAS-helper.git). However, given the technical complexity and resource limitation of a solo developer, I made the strategic decision to narrow down the scope. This allows me to focus on my own major and allocate all development efforts toward mastering the platform's rhythm analysis core.*
