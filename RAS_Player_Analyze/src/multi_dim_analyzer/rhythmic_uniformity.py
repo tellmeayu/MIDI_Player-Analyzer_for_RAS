@@ -18,10 +18,12 @@ Result: Score in [0, 1] where:
 
 Note on nPVI calculation:
   nPVI is a measure of local inter-onset interval variability, defined as:
-  nPVI = (1/N) * Σ |IOI_i - IOI_{i-1}| / (IOI_i + IOI_{i-1}) * 100
+  nPVI = (1/(N-1)) * Σ |IOI_k - IOI_{k-1}| / ((IOI_k + IOI_{k-1})/2) * 100
   
-  Where IOI_i are inter-onset intervals and N is the number of pairs.
-  nPVI values typically range from 0 (uniform) to 100 (highly variable).
+  Where IOI_k are inter-onset intervals and N is the number of IOIs.
+  The formula calculates the average of the absolute difference between successive
+  IOIs, normalized by their mean.
+  nPVI values typically range from 0 (uniform) to ~200.
 """
 
 from typing import Optional, Tuple
@@ -177,23 +179,21 @@ class RhythmicUniformityAnalyzer:
         if len(iois) < 2:
             return 0.0
         
-        # Compute pairwise differences normalized by sum
-        differences = []
-        for i in range(len(iois) - 1):
-            ioi_curr = iois[i]
-            ioi_next = iois[i + 1]
-            
-            # Avoid division by very small values
-            denominator = ioi_curr + ioi_next
-            if denominator > 1e-10:
-                diff = abs(ioi_next - ioi_curr) / denominator
-                differences.append(diff)
+        # Compute pairwise differences normalized by their mean
+        # nPVI = 100 * (1/(n-1)) * sum(|d_k - d_{k-1}| / ((d_k + d_{k-1})/2))
+        diffs = np.abs(np.diff(iois))
+        sums = iois[:-1] + iois[1:]
         
-        if len(differences) == 0:
+        # Avoid division by zero
+        valid_indices = sums > 1e-10
+        
+        if not np.any(valid_indices):
             return 0.0
-        
-        # nPVI is the mean relative difference, scaled to ~0-100 range
-        npvi = np.mean(differences) * 100.0
+            
+        # The original formula divides by the mean of the pair, so we multiply the sum by 2
+        # and then divide by the number of pairs.
+        # This is equivalent to mean(|a-b|/((a+b)/2))
+        npvi = np.mean(diffs[valid_indices] / (sums[valid_indices] / 2.0)) * 100.0
         
         return float(npvi)
     
