@@ -1,39 +1,152 @@
-**Project Description**
-<table>
-  <tr>
-    <td style="width: 33.3%;">
-      <img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-19.21.57.png" alt="4-dim framework demo" style="width: 100%; border-radius: 8px;">
-      <br>
-      <b>4-dim analysis visualization</b>
-    </td>
-    <td style="width: 33.3%;">
-      <img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-16.55.43.png" alt="Batch Processing" style="width: 100%; border-radius: 8px;">
-      <br>
-      <b>Batch Processing window</b>
-    </td>
-    <td style="width: 33.3%;">
-      <img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-21.14.09.png" alt="Radar Chart" style="width: 100%; border-radius: 8px;">
-      <br>
-      <b>main player window</b>
-    </td>
-  </tr>
-</table>
-This project is a specialized platform designed to support clinicians working with Rhythmic Auditory Stimulation (RAS) therapy for gait rehabilitation. RAS is mainly applied as an alternative rehab method for patients with Parkinson's disease, stroke, and other movement disorders. At its heart, the system tackles a fundamental challenge in music therapy: identifying which pieces of music are actually suitable for therapeutic use. While any MIDI player can produce sound, this platform goes deeper by analyzing the rhythmic structure of music across multiple dimensions, including beat density, predictability, accent patterns, and rhythmic uniformity. This is expected to help therapists understand whether a piece will support or hinder motor entrainment. To categorize music into clinically meaningful groups (duple vs. triple meter), a dual-layer meter classification system was designed. It uses both MIDI pattern analysis and neural network-based audio processing (RNN+DBN). Beyond analysis, the platform provides microsecond-accurate playback with an integrated therapy metronome that can be precisely synchronized to music, supporting cadences from 20 to 180 for gait training. Smart timing correction is another small tool which handles common MIDI quantization error (shifting from meter grid). The interface remains deliberately simple—resembling a straightforward MIDI player—but surfaces sophisticated features only when needed.
+# Computer-Assisted Music Analysis and Screening for Rhythmic Auditory Stimulation
 
-**Key Features**
+A research-oriented music analysis and playback system for Rhythmic Auditory Stimulation (RAS) in gait rehabilitation.
 
-- **High-Precision Playback**: Microsecond-accurate MIDI synthesis with FluidSynth and real-time metronome synchronization
-- **4D Rhythm Analysis**: Quantifies musical rhythm across Beat Density, Predictability, Beat Salience, and Rhythmic Uniformity dimensions
-- **Smart Timing Correction**: Pattern-based downbeat detection with neural network validation and MIDI event adjustment
-- **Batch Processing**: Process-isolated analysis with dual-layer meter classification (MIDI + audio) and persistent caching
-- **RAS Therapy Tools**: Direct cadence control (20-180 steps/min), unified downbeat cueing, and clinical gait training optimization
-- **Advanced Architecture**: SQLite caching, atomic IPC, CLI automation, and cross-platform compatibility
+This project combines MIDI-centered playback control, interpretable rhythmic feature analysis, and batch meter screening to support music selection in rehabilitation scenarios. It was developed as part of my master's thesis in Music Technology, with a focus on digital music intelligent processing.
 
-Full description (with algorithm explanation that utilized in 4-dim framework): https://www.sylviastudio.cn/overview-ras-player/
+## Overview
+
+Rhythmic Auditory Stimulation (RAS) is a well-established neurorehabilitation technique for improving gait impairments. However, in real rehabilitation practice, music selection is still highly dependent on therapist experience. Existing workflows often rely on repeated manual listening, metronome comparison, or general-purpose audio software, which makes music screening inefficient and difficult to standardize.
+
+This project addresses that gap by translating experience-based judgments of rhythmic suitability into interpretable computational indicators and screening methods. The result is a desktop system that integrates:
+
+- precise MIDI playback for rehabilitation use
+- interpretable rhythmic feature analysis for single-track assessment
+- batch meter screening for large music libraries
+
+## Why This Project Matters
+
+The project was designed for a specific application problem rather than as a general music player or a generic MIR toolkit.
+
+In RAS-based gait rehabilitation, therapists often need music that is:
+
+- rhythmically stable
+- easy to synchronize with
+- clear in beat structure
+- suitable for controlled tempo adjustment
+
+Despite the clinical relevance of these properties, there is still a lack of practical tools that can evaluate them in a structured and computationally interpretable way. This project aims to provide such a tool.
+
+## Main Contributions
+
+The study makes three main contributions:
+
+- It proposes an interpretable four-dimensional rhythmic feature framework for assessing music suitability in RAS scenarios.
+- It implements a dual-mode meter screening pipeline that combines symbolic MIDI analysis with audio-assisted analysis.
+- It integrates playback, feature analysis, and batch screening into a unified desktop application.
+
+## Core Features
+
+- MIDI-based playback with tempo control adapted to gait training scenarios
+- independent metronome control
+- track-level solo and mute control for multi-track MIDI files
+- timing correction support for slightly misaligned MIDI files
+- four-dimensional rhythmic feature analysis with radar-chart visualization
+- batch meter screening for music libraries
+- fast symbolic mode for efficient large-scale screening
+- deep audio-assisted mode for more complex metrical structures
+
+## The Four-Dimensional Rhythmic Framework
+
+A central part of this project is an interpretable framework for rhythmic suitability analysis in RAS. It models rhythm through four dimensions.
+
+### 1. Uniformity
+
+Uniformity measures the temporal stability of rhythmic events.
+
+It reflects whether the underlying rhythmic intervals provide a stable reference for beat induction and sensorimotor synchronization. In this project, uniformity is derived from the variability of inter-onset intervals (IOIs) and mapped into standardized score.
+
+### 2. Salience
+
+Salience measures how clearly beat positions stand out from their local background.
+
+A rhythm with higher beat salience provides clearer auditory anchors for synchronization. This dimension is intended to capture how strongly beat-relevant events emerge in the surface structure of the music.
+
+### 3. Predictability
+
+Predictability measures how well rhythmic events support beat expectation.
+
+This dimension combines two aspects:
+
+- macro-level beat coverage, which reflects whether expected beat locations are sufficiently reinforced
+- micro-level metrical alignment, which reflects whether events align well with the internal strong-weak metrical structure
+
+### 4. Density
+
+Density measures the event load per beat.
+
+This dimension is meant to reflect attentional load. Rhythms that are too sparse may fail to support stable beat perception, while rhythms that are too dense may overload the listener and reduce synchronization efficiency.
+
+## Why an Interpretable Framework
+
+The goal of this framework is not to replace therapists or to reduce music choice to a single automatic score. Instead, it is designed as a decision-support tool.
+
+Compared with fully black-box prediction pipelines, this framework offers:
+
+- interpretability at the feature level
+- explicit links to rhythm perception theory
+- clearer communication with domain experts
+- a more transparent basis for future refinement and validation
+
+## Dual-Mode Meter Screening
+
+To support large-scale music library screening, the system includes a dual-mode meter classification pipeline.
+
+### Fast Mode
+
+Fast mode operates directly on MIDI data.
+
+It performs efficient preliminary screening using symbolic rhythmic evidence, including tempo-domain periodicity analysis and time-domain verification. This mode is intended for large libraries and rapid first-pass filtering.
+
+### Deep Mode
+
+Deep mode supplements symbolic analysis with audio-based beat and downbeat inference.
+
+It is designed for more complex cases in which symbolic information alone may fail to capture metrical structure reliably, especially in music with richer surface variation or ambiguous compound meter behavior.
+
+### Why Two Modes
+
+The two modes serve different practical needs:
+
+- Fast mode prioritizes efficiency and scalability
+- Deep mode prioritizes robustness in more complex samples
+
+This design reflects a practical tradeoff between speed and precision in rehabilitation-oriented music screening workflows.
+
+## User Interface
+
+The system includes three main interface components:
+
+- main playback interface for loading, controlling, and auditioning MIDI files
+- batch screening interface for library-level meter classification
+- rhythmic analysis interface for visualizing the four-dimensional profile of the currently loaded track
+
+The UI is designed for practical use rather than only algorithm demonstration. It emphasizes clear interaction, low cognitive load, and direct support for therapist-oriented workflows.
+
+## Example Use Cases
+
+This system is intended to support tasks such as:
+
+- screening a large MIDI collection for duple-oriented gait-training candidates
+- analyzing whether a specific piece is rhythmically too dense or insufficiently salient
+- comparing tracks not only by BPM or nominal time signature, but also by interpretable rhythmic characteristics
+- adjusting playback tempo without pitch distortion using MIDI
+- isolating specific tracks in multi-track MIDI files to reduce listening overload
+
+## Technical Stack
+This project is implemented primarily in Python.        
+Main tools and libraries include:
+- Python
+- PyQt5 for the desktop interface
+- Mido for MIDI parsing and message handling
+- Librosa for audio analysis support
+- Madmom for beat and downbeat related processing
+- standard scientific Python tools for numerical computation and visualization
 
 ---
 
-### Playback basic
+## User Interface
+### Main Window
 <figure>
 <img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-21.14.09.png" width="500">
 </figure>
@@ -58,7 +171,7 @@ If a standard MIDI exhibits slight quantization shift that prevents metronome al
 It calculates the optimal downbeat shift and  applies it automatically. However, given the abstract and complex nature of musical rhythm, the algorithm output isn't always precise. Therefore, a manual fine-tuning controls are provided for human validation.
 
 ### Batch Analysis for Meter Categorization
-The goal of meter estimation here is not to "guess" the time signature, but to robustly categorize the music into "duple" or "triple" classes based on its perceived "meter feeling" (critical for RAS). There are two analysis modes. The fast mode performs analysis purely on MIDI data without giving meter results. The Deep Mode, conversely, provides a probabilistic meter category, though only for reference. The algorithm uses a "validation strategy" to iterate possibilities. For macro-structural analysis, the system currently limits its scope to the most common regular meter types (2/4, 3/4, 4/4), focusing on macro-level duple/triple distinction rather than full time-signature identification.
+The goal of meter estimation here is not to "guess" the time signature, but to robustly categorize the music into "duple" or "triple" types based on its perceived "meter feeling" (critical for RAS). 
 <figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-16.55.43.png" width="450"></figure>
 <figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-16.56.15.png" width="450"></figure>
 <figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/deep-mode-results-1.png" width="450"></figure>
@@ -66,99 +179,40 @@ The goal of meter estimation here is not to "guess" the time signature, but to r
 ### 4-dim Rhythm Analyzer with Radar Chart Visualization
 
 The 4-D analysis result is visualized on a Radar Chart (with randomly assigned colors). This visualization allows for immediate, comparative assessment of the music's rhythmic profile.
-For instance, Debussy's *Clair de Lune* serves as an extreme example. Its low Predictability score suggests that the rhythm is likely too ambiguous for a listener to reliably tap or walk along with:
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-25-at-15.53.53.png" width="400"></figure>
-
-A Scarlatti keyboard sonata may also be difficult to follow, but due to a different profile, such as extremely low Beat Salience (a "flat" or non-accented rhythmic feel):
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-19.07.56.png" width="400"></figure>
-
-On the contrary, some music sounds quite "on-beat", that usually indicates a good candidate used for RAS gait training:
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-25-at-15.52.08.png" width="400"></figure>
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-25-at-15.51.28.png" width="400"></figure>
-
-Low note density is also a critical factor need to be considered, especially when matched with a patient's low cadence. Insufficient rhythmic information can lead to **perceptive or cognitive processing failure** rather than rhythmic entrainment.
-
-Conversely, music with high speed and high density provides information that is too cognitively "dense" to process. This complexity can decrease the patient's perceived "joyfulness" or impair the brain's ability to encode the signals into a coherent "musical line".
-
-This model, while effective as a first stage, is far from perfect. I believe there is significant room for improvement across its feature set, underlying algorithms, and dimensionality.
+<table>
+  <tr>
+    <td style="width: 50%;">
+      <img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-19.21.57.png" alt="4-dim framework demo" style="width: 100%; border-radius: 8px;">
+      <br>
+      <b>4-dim case</b>
+    </td>
+    <td style="width: 50%;">
+      <img src="https://www.sylviastudio.cn/wp-content/uploads/2026/02/Debussy.png" alt="4-dim framework demo" style="width: 100%; border-radius: 8px;">
+      <br>
+      <b>4-dim case</b>
+    </td>
+  </tr>
+</table>
 
 ---
 
-## Architecture
+## Important Notes
+- This repository contains a research prototype rather than a fully validated clinical product.
 
-The system implements a modular, process-isolated architecture. 
-```
-Core Folder Structure
-src/
-├── main.py                           # Application entry point
-├── __init__.py                       # Package initialization
-├── core/                             # Core playback engine
-│   ├── __init__.py
-│   ├── midi_engine.py                # MIDI synthesis and playback engine
-│   ├── precision_timer.py            # High-precision timing system
-│   ├── event_scheduler.py            # Real-time event scheduling
-│   ├── metronome.py                  # Audio metronome implementation
-│   ├── ras_therapy_metronome.py      # RAS-optimized metronome
-│   ├── player_session_state.py       # Session state management
-│   ├── playback_mode.py              # Playback mode definitions
-│   ├── beat_timeline.py              # Beat position management
-│   ├── track_activity_monitor.py     # Track visualization data
-│   ├── midi_metadata.py              # MIDI metadata handling
-│   ├── gm_instruments.py             # General MIDI instrument definitions
-│   └── audio_cache.py                # Audio file caching system
-├── analysis/                         # Musical analysis toolkit
-│   ├── __init__.py
-│   ├── anacrusis_detector.py         # First downbeat detection
-│   ├── beat_tracker_basic.py         # Basic beat tracking
-│   ├── beat_tracking_service.py      # Beat tracking service layer
-│   ├── preprocessor.py               # MIDI preprocessing utilities
-├── batch_filter/                     # Batch processing system
-│   ├── __init__.py
-│   ├── core/                         # Core analysis algorithms
-│   │   ├── __init__.py
-│   │   ├── batch_processor.py        # Multi-stage batch processor
-│   │   ├── tempogram_analyzer.py     # MIDI-based rhythm analysis
-│   │   └── meter_estimator.py        # Audio-based meter estimation
-│   ├── cli/                          # Command-line interface
-│   │   ├── __init__.py
-│   │   └── batch_analyzer_cli.py     # CLI subprocess implementation
-│   ├── ui/                           # Batch analysis UI
-│   │   ├── __init__.py
-│   │   └── batch_analyzer_window.py  # Independent analysis window
-│   └── cache/                        # Caching layer
-│       ├── __init__.py
-│       └── library_manager.py        # SQLite-based result caching
-├── multi_dim_analyzer/               # 4D rhythm analysis framework
-│   ├── __init__.py
-│   ├── config.py                     # Analysis configuration
-│   ├── pipeline.py                   # Main analysis orchestration
-│   ├── plotting.py                   # Visualization utilities
-│   ├── beat_density.py               # Dimension I: Beat density analysis
-│   ├── predictability.py             # Dimension II: Metrical predictability
-│   ├── beat_salience.py              # Dimension III: Beat salience
-│   ├── rhythmic_uniformity.py        # Dimension IV: Rhythmic uniformity
-│   └── utils/                        # Analysis utilities
-│       ├── __init__.py
-│       ├── beat_grid.py              # Beat grid generation
-│       └── midi_processor.py         # MIDI processing utilities
-└── ui/                               # User interface components
-    ├── __init__.py
-    ├── gui.py                        # Main application window
-    ├── playback_controls.py          # Playback control widgets
-    ├── track_visualization.py        # Real-time track visualization
-    ├── dialogs.py                    # Dialog windows
-    ├── analysis_dialogs.py           # Analysis-related dialogs
-    ├── menu_manager.py               # Menu system management
-    ├── utilities.py                  # UI utility functions
-    ├── file_info_display.py          # File information display
-    ├── anacrusis_tool_window.py      # Timing correction tool window
-    ├── rhythm_analysis_dialog.py     # Rhythm analysis interface
-    ├── rhythm_analysis_worker.py     # Analysis worker thread
-    ├── audio_player_launcher.py      # Audio player launch utilities
-    ├── audio_player_window.py        # Audio player interface
-    └── beat_tracking_worker.py       # Beat tracking background worker
-```
----
+- The system is intended as a decision-support tool, not a clinical decision-making system.
 
-***Author's notes*** 
-*This project is a refined successor to an ambitious early concept. The initial motivation came from my basic training in Neurologic Music Therapy last year(2024). My first idea was to simulate a complete RAS therapy session, including gait detection via cutting-edge computer vision technology like MediaPipe Pose (https://github.com/tellmeayu/RAS-helper.git). However, given the technical complexity and resource limitation of a solo developer, I made the strategic decision to narrow down the scope. This allows me to focus on my own major and allocate all development efforts toward mastering the platform's rhythm analysis core.*
+- The four-dimensional framework is theory-informed and engineering-driven, but not yet fully validated through expert studies.
+
+- Compound meter remains a challenging case because metrical structure can be interpreted differently depending on hierarchical level and analytical perspective.
+
+- Future work should include expert annotation, user studies, and more systematic data-driven refinement.
+
+## Relation to Thesis
+This repository is based on my master's thesis in Music Technology.
+
+Thesis topic: 
+**MIDI Music Classification for RASTherapy: A Study and Prototype System Design**
+
+Language of thesis: Chinese
+
+English summary or translated materials: available upon request
