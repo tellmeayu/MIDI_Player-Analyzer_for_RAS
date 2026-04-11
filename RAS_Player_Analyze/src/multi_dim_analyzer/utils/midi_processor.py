@@ -111,7 +111,7 @@ class MIDIProcessor:
     @staticmethod
     def filter_iois(
         iois: np.ndarray,
-        min_ioi_sec: float = 0.02,
+        min_ioi_sec: float = 0.015,
         max_ioi_sec: Optional[float] = None
     ) -> np.ndarray:
         """
@@ -300,17 +300,20 @@ class MIDIProcessor:
                     pretty_midi.TimeSignature(num, den, 0.0)
                 ]
                 
-                # Set tempo (find tempo active at section start)
-                active_tempo = 120.0  # default
                 for t_tempo, bpm in tempo_map:
-                    if t_tempo <= t_ts:
-                        active_tempo = bpm
-                    else:
+                    if t_ts <= t_tempo < section_end:
+                        adjusted_tempo_time = t_tempo - t_ts
+                        if adjusted_tempo_time < 0.001:
+                            pm_extracted._tick_scales = [(0, 60.0/(bpm*pm_extracted.resolution))]
                         break
-                
-                pm_extracted.tempo_changes = [
-                    pretty_midi.TempoChange(active_tempo, 0.0)
-                ]
+                if not hasattr(pm_extracted, '_tick_scales') or len(pm_extracted._tick_scales) == 0:
+                    active_tempo = 120.0
+                    for t_tempo, bpm in tempo_map:
+                        if t_tempo <= t_ts:
+                            active_tempo = bpm
+                        else:
+                            break
+                    pm_extracted._tick_scales = [(0, 60.0/active_tempo*pm_extracted.resolution))]
                 
                 return pm_extracted
         
