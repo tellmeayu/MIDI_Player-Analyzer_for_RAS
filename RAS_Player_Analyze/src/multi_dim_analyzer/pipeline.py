@@ -16,6 +16,7 @@ from .beat_salience import BeatSalienceAnalyzer
 from .rhythmic_uniformity import RhythmicUniformityAnalyzer
 from .config import AnalyzerConfig
 from .plotting import plot_radar_chart
+from .utils.midi_processor import MIDIProcessor
 
 
 @dataclass
@@ -39,8 +40,23 @@ class AnalysisResult:
 class MultiDimensionalAnalyzer:
     """Orchestrates analysis across all four dimensions."""
 
-    def __init__(self, config: Optional[AnalyzerConfig] = None):
+    def __init__(
+        self, 
+        config: Optional[AnalyzerConfig] = None,
+        enable_preprocessing: bool = True,
+        min_section_duration: float = 30.0
+    ):
+        """ Initialize analyzer with optional preprocessing.
+
+        Args:
+            config: Analyzer configuration for all dimensions.
+            enable_preprocessing: If True, extract valid section before analysis.
+                                Useful for MIDI files with multiple time signatures or sparse intro/outro sections.
+            min_section_duration: Minimum duration (seconds) for valid section extraction.
+        """
         self.config = config or AnalyzerConfig()
+        self.enable_preprocessing = enable_preprocessing
+        self.min_section_duration = min_section_duration
         self.bd_analyzer = BeatDensityAnalyzer(self.config.beat_density)
         self.ru_analyzer = RhythmicUniformityAnalyzer(self.config.rhythmic_uniformity)
         self.bs_analyzer = BeatSalienceAnalyzer(self.config.beat_salience)
@@ -65,6 +81,35 @@ class MultiDimensionalAnalyzer:
             )
 
         errors: Dict[str, str] = {}
+
+        #Apply preprocessing to extract valid section if enabled
+        if self.enable_preprocessing:
+            try:
+                pm_original_duration = pm.get_end_times()
+                pm = MIDIProcessor.extract_valid_section(
+                    pm,
+                    min_duration_sec=self.min_section_duration
+                )
+                pm_processed_duration = pm.get_end_time()
+
+                # Validate preprocessing result
+                if len(pm.instruments) == 0:
+                    return AnalysisResult(
+                        beat_density=None,
+                        predictability=None,
+                        beat_salience=None,
+                        rhythmic_uniformity=None,
+                        error_messages={"preprocessing": "No instruments after preprocessing"},
+                    )
+                
+                # Log preprocessing if duration changed
+                if abs(pm_processed_duration - pm_original_duration) > 1.0:
+                    print(f"Preprocessing: Extracted {pm_processed_duration:.1f}s section from {pm_original_duration:.1f}s file")
+
+            except Exception as e:
+                errors["preprocessing_warning"] = str(e)
+                print(f"Warning: Preprocessing failed ({e}), processing with original MIDI")
+
 
         # Dimension I: Beat Density
         try:
