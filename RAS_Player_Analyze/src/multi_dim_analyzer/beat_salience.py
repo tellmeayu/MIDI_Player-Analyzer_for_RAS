@@ -386,27 +386,28 @@ class BeatSalienceAnalyzer:
         
         elif method == "sigmoid":
             # Sigmoid-like compression: maps [0, inf] to [0, 1] with expanded discrimination
-            # For score <= 1.0: linear mapping to [0, 0.65] (elevated from [0, 0.5] to address overall low scores)
-            # For score > 1.0: steeper sigmoid compression to [0.65, 1.0) (expanded range)
+            # For score <= 1.0: linear mapping to [0, 0.3]
+            # For score > 1.0: sigmoid compression to [0.3, 1.0) 
             if raw_score <= 1.0:
-                # Linear mapping: [0, 1] -> [0, 0.65] (elevated to address overall low scores)
+                # Linear mapping: [0, 1] -> [0, 0.3]
                 # For very small scores, use smooth mapping to avoid 0.0
                 if raw_score == 0.0:
                     normalized = min_score
                 elif raw_score < 0.1:
-                    # Smooth mapping for small scores: [0, 0.1] -> [min_score, 0.12]
-                    normalized = min_score + (0.12 - min_score) * (raw_score / 0.1)
+                    # Smooth mapping for small scores: [0, 0.1] -> [min_score, 0.08]
+                    normalized = min_score + (0.08 - min_score) * (raw_score / 0.1)
                 else:
-                    # Normal linear mapping for [0.1, 1.0] -> [0.12, 0.65]
-                    normalized = 0.12 + (raw_score - 0.1) * (0.65 - 0.12) / (1.0 - 0.1)
+                    # Normal linear mapping for [0.1, 1.0] -> [0.08, 0.3]
+                    normalized = 0.08 + (raw_score - 0.1) * (0.3 - 0.08) / (1.0 - 0.1)
             else:
-                # Steeper sigmoid compression: [1, inf] -> [0.65, 1.0)
-                # Using steeper curve: 0.65 + 0.35 * (1 - 1/(1 + 0.7*log(score)))
-                # This maps: 1 -> 0.65, 2 -> ~0.78, 3 -> ~0.85, 5 -> ~0.92, 10 -> ~0.97
-                # Provides better discrimination across the [1, 5] range (max_ratio_clip=5.0)
-                # while maintaining elevated scores to address overall low score issue
+                # sigmoid compression: [1, inf] -> [0.3, 1.0)
+                # Using adjusted curve: 0.3 + 0.7 * (1 - 1/(1 + k*log(score)))
+                # This maps: 1 -> 0.3, 2 -> ~0.53, 3 -> ~0.6, 5 -> ~0.67
+                # Provides better discrimination across the [1, 5] -> 0.3~0.67
                 log_score = np.log(raw_score)
-                normalized = 0.65 + 0.35 * (1.0 - 1.0 / (1.0 + 0.7 * log_score))
+                # Adjust k to control steepness: k=0.7 gives good spread
+                k = 0.7
+                normalized = 0.3 + 0.7 * (1.0 - 1.0 / (1.0 + k * log_score))
             
             normalized = float(np.clip(normalized, 0.0, 1.0))
         
@@ -416,12 +417,13 @@ class BeatSalienceAnalyzer:
                 if raw_score == 0.0:
                     normalized = min_score
                 elif raw_score < 0.1:
-                    normalized = min_score + (0.12 - min_score) * (raw_score / 0.1)
+                    normalized = min_score + (0.08 - min_score) * (raw_score / 0.1)
                 else:
-                    normalized = 0.12 + (raw_score - 0.1) * (0.65 - 0.12) / (1.0 - 0.1)
+                    normalized = 0.08 + (raw_score - 0.1) * (0.3 - 0.08) / (1.0 - 0.1)
             else:
                 log_score = np.log(raw_score)
-                normalized = 0.65 + 0.35 * (1.0 - 1.0 / (1.0 + 0.7 * log_score))
+                k = 0.7
+                normalized = 0.3 + 0.7 * (1.0 - 1.0 / (1.0 + k * log_score))
             normalized = float(np.clip(normalized, 0.0, 1.0))
         
         # Ensure minimum score threshold to avoid extreme values
