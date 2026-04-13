@@ -17,7 +17,7 @@ class BeatDensityConfig:
     use_dynamic_epsilon: bool = True
     """Whether to use tempo-based dynamic epsilon for collapsing simultaneous onsets."""
 
-    simul_epsilon_sec: float = 0.015
+    simul_epsilon_sec: float = 0.01
     """Threshold (seconds) for collapsing simultaneous onsets."""
     
     include_drums: bool = False
@@ -44,7 +44,7 @@ class BeatDensityConfig:
     sigmoid_alpha: float = 0.9
     """Sigmoid steepness parameter."""
     
-    sigmoid_center: float = 4.0
+    sigmoid_center: float = 2.5
     """Sigmoid center (inflection point) in NPB units."""
 
 
@@ -66,7 +66,7 @@ class RhythmicUniformityConfig:
     min_events_required: int = 4
     """Minimum number of events required for valid analysis."""
     
-    k: float = 0.015
+    k: float = 0.03
     """Decay constant for exponential mapping: uniformity = exp(-k * nPVI)."""
     
     beat_relative: bool = False
@@ -143,7 +143,7 @@ class PredictabilityConfig:
     chord_handling: Literal['binary', 'stacked'] = 'binary'
     """How to handle simultaneous onsets: 'binary' (=1 event) or 'stacked' (count all)."""
     
-    note_duration_threshold_sec: float = 0.05
+    note_duration_threshold_sec: float = 0.1
     """Minimum note duration (seconds) to include. Filters out very short grace notes."""
     
     macro_beat_tolerance_sec: float = 0.1
