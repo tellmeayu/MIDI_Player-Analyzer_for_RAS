@@ -199,10 +199,11 @@ class RhythmicUniformityAnalyzer:
     
     def _npvi_to_uniformity(self, npvi: float) -> float:
         """
-        Map nPVI to uniformity score [0, 1] using exponential decay.
+        Map nPVI to uniformity score [0, 1] using piecewise decay mapping.
         
-        Higher nPVI → lower uniformity score.
-        Mapping: uniformity = exp(-k * nPVI)
+        - nPVI [0, 20]: High uniformity, slow decay.
+        - nPVI [20, 55]: Main discrimination range, rapid decay.
+        - nPVI > 55: Low uniformity, saturated.
         
         Args:
             npvi: Raw nPVI value (0-100 scale).
@@ -210,17 +211,31 @@ class RhythmicUniformityAnalyzer:
         Returns:
             Uniformity score in [0, 1] where 1=perfectly uniform.
         """
-        # Clamp to reasonable range
-        npvi_clipped = np.clip(npvi, 0.0, 100.0)
+        # Clamp to a practical maximum, e.g., 150, as nPVI can exceed 100
+        npvi_clipped = np.clip(npvi, 0.0, 150.0)
         
-        # Exponential decay mapping
-        k = self.config.k
-        uniformity = np.exp(-k * npvi_clipped)
-        
-        # Clamp to [0, 1] to handle numerical noise
-        uniformity = np.clip(uniformity, 0.0, 1.0)
-        
-        return float(uniformity)
+        # 1. Highly Uniform zone: nPVI in [0, 20] -> Score in [1.0, 0.7]
+        if npvi_clipped <= 20.0:
+          return 1.0 - (npvi_clipped / 20.0) * 0.3
+          
+        # 2. Main discrimination zone: nPVI in (20, 55] -> Score in (0.7, 0.2]
+        elif npvi_clipped <= 55.0:
+          progress = (npvi_clipped - 20.0) / (55.0 - 20.0)  # normalize to [0,1]
+
+          # map the normalized progress to the score range [0.7,0.2] using a simpler power function instead of exponential
+          # y = start - (start - end) * p^alpha, where alpha < 1
+          alpha = 0.6
+          curved_progress = progress ** alpha
+
+          start_score = 0.7
+          end_score = 0.2
+          
+          return start_score - curved_progress * (start_score - end_score)
+
+        # 3. saturation zone (highly variable): nPVI > 55 -> score in [0.2, 0,0]
+        else:
+          k = 0.15 # adjustable param for exponential decay
+          return 0.3 * np.exp(-k * (npvi_clipped - 55))
     
     def _npvi_to_uniformity_vectorized(self, npvi_array: np.ndarray) -> np.ndarray:
         """
