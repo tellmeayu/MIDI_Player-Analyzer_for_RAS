@@ -179,8 +179,8 @@ class RhythmAnalysisDialog(QDialog):
         items = [
             ("■ Density", self._get_density_desc(), density_highlight),
             ("■ Predictability", self._get_predictability_desc(), (pred_score is not None and pred_score < 0.6)),
-            ("■ Salience", self._get_salience_desc(), (bs_score is not None and bs_score < 0.3)),
-            ("■ Uniformity", self._get_uniformity_desc(), (ru_score is not None and ru_score < 0.4)),
+            ("■ Salience", self._get_salience_desc(), (bs_score is not None and bs_score < 0.5)),
+            ("■ Uniformity", self._get_uniformity_desc(), (ru_score is not None and ru_score < 0.5)),
         ]
 
         for i, (label, desc, highlight) in enumerate(items):
