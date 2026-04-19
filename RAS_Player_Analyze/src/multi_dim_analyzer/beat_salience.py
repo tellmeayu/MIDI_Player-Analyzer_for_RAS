@@ -364,27 +364,7 @@ class BeatSalienceAnalyzer:
         method = self.config.normalization_method.lower()
         min_score = self.config.min_score
         
-        if method == "clip":
-            # Simple clipping (legacy behavior)
-            normalized = float(np.clip(raw_score, 0.0, 1.0))
-            # Ensure minimum score to avoid extreme values
-            if normalized < min_score:
-                normalized = min_score
-        
-        elif method == "log":
-            # Logarithmic compression: log(1 + score) / log(1 + max_expected)
-            # Assuming max_expected salience ratio is around 10
-            max_expected = 10.0
-            if raw_score > 0:
-                normalized = np.log1p(raw_score) / np.log1p(max_expected)
-                normalized = float(np.clip(normalized, 0.0, 1.0))
-            else:
-                normalized = min_score
-            # Ensure minimum score threshold
-            if normalized < min_score:
-                normalized = min_score
-        
-        elif method == "sigmoid":
+        if method == "sigmoid":
             # Sigmoid-like compression: maps [0, inf] to [0, 1] with expanded discrimination
             # For score <= 1.0: linear mapping to [0, 0.3]
             # For score > 1.0: sigmoid compression to [0.3, 1.0) 
