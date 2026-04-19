@@ -110,8 +110,8 @@ class BeatSalienceConfig:
     If None, analyzes entire piece. Default: 60.0 seconds."""
     
     normalization_method: str = "sigmoid"
-    """Score normalization method: 'clip' (simple clipping), 'sigmoid' (sigmoid compression), 
-    or 'log' (logarithmic compression). Default: 'sigmoid'."""
+    """Score normalization method: 'clip' (depracated), 'sigmoid' (sigmoid compression), 
+    or 'log' (depracated). Default: 'sigmoid'."""
     
     min_score: float = 0.05
     """Minimum score threshold to avoid extreme values. Even if raw salience is 0, 
