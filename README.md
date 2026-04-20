@@ -148,33 +148,33 @@ Main tools and libraries include:
 ## User Interface
 ### Main Window
 <figure>
-<img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-21.14.09.png" width="500">
+<img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/初始窗口界面.jpg" width="500">
 </figure>
 
 It just looks like a simple MIDI player plus a tempo/cadence control! I designed the front-end to be clean and intuitive, focusing purely on the basic operation. All the heavy lifting is working silently behind the scenes, only surfacing data when specifically requested or automatically detected. I deliberately kept the UI minimal. 
 
 Once you open a MIDI:
 <figure>
-<img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/playback-system.png" width="500">
+<img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/playback-system.png" width="500">
 </figure>
 
-If a loaded MIDI lacks sufficient metadata (e.g. Type 0), the system automatically enter an assisted analysis mode:
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/type0-mode.png" width="450">
+If a loaded MIDI lacks sufficient metadata (e.g. Type 0), the system automatically enter an analysis mode:
+<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/type0-mode.jpg" width="450">
 </figure>
 
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/beat-regularity.png" width="450"></figure>
+<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/beat-regularity.jpg" width="450"></figure>
 
 An additional audio player is provided, which features the music mixed with a precisely synchronized metronome cue for training purposes. More importantly, once the beat tracking finished, system will immediately calculate **Beat Regularity**, measuring if it's suitable for RAS gait training. The standard set here is rather strict considering the training purpose.
 
 If a standard MIDI exhibits slight quantization shift that prevents metronome alignment, the "Timing Correction" tool is engaged. Once you applied the correction:
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-17.04.26-e1763904871842.png" width="450"></figure>
+<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/3.3-timing-correction.jpg" width="450"></figure>
+
 It calculates the optimal downbeat shift and  applies it automatically. However, given the abstract and complex nature of musical rhythm, the algorithm output isn't always precise. Therefore, a manual fine-tuning controls are provided for human validation.
 
 ### Batch Analysis for Meter Categorization
 The goal of meter estimation here is not to "guess" the time signature, but to robustly categorize the music into "duple" or "triple" types based on its perceived "meter feeling" (critical for RAS). 
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-16.55.43.png" width="450"></figure>
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-16.56.15.png" width="450"></figure>
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/deep-mode-results-1.png" width="450"></figure>
+<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/3.3-批处理.jpg" width="450"></figure>
+
 
 ### 4-dim Rhythm Analyzer with Radar Chart Visualization
 
