@@ -148,14 +148,14 @@ Main tools and libraries include:
 ## User Interface
 ### Main Window
 <figure>
-<img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/初始窗口界面.jpg" width="500">
+<img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/初始窗口界面.jpg" width="450">
 </figure>
 
 It just looks like a simple MIDI player plus a tempo/cadence control! I designed the front-end to be clean and intuitive, focusing purely on the basic operation. All the heavy lifting is working silently behind the scenes, only surfacing data when specifically requested or automatically detected. I deliberately kept the UI minimal. 
 
 Once you open a MIDI:
 <figure>
-<img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/playback-system.png" width="500">
+<img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/playback-system.png" width="450">
 </figure>
 
 If a loaded MIDI lacks sufficient metadata (e.g. Type 0), the system automatically enter an analysis mode:
@@ -173,23 +173,29 @@ It calculates the optimal downbeat shift and  applies it automatically. However,
 
 ### Batch Analysis for Meter Categorization
 The goal of meter estimation here is not to "guess" the time signature, but to robustly categorize the music into "duple" or "triple" types based on its perceived "meter feeling" (critical for RAS). 
-<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/3.3-批处理.jpg" width="450"></figure>
+<figure><img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/3.3-批处理.jpg" width="600"></figure>
 
 
 ### 4-dim Rhythm Analyzer with Radar Chart Visualization
 
 The 4-D analysis result is visualized on a Radar Chart (with randomly assigned colors). This visualization allows for immediate, comparative assessment of the music's rhythmic profile.
+
 <table>
   <tr>
-    <td style="width: 50%;">
-      <img src="https://www.sylviastudio.cn/wp-content/uploads/2025/11/Screenshot-2025-11-23-at-19.21.57.png" alt="4-dim framework demo" style="width: 100%; border-radius: 8px;">
+    <td style="width: 33.3%;">
+      <img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/四维case.png" alt="4-dim framework demo" style="width: 100%; border-radius: 8px;">
       <br>
-      <b>4-dim case</b>
+      <b>4-dim case Medieval</b>
     </td>
-    <td style="width: 50%;">
+    <td style="width: 33.3%;">
       <img src="https://www.sylviastudio.cn/wp-content/uploads/2026/02/Debussy.png" alt="4-dim framework demo" style="width: 100%; border-radius: 8px;">
       <br>
-      <b>4-dim case</b>
+      <b>4-dim case Debussy</b>
+    </td>
+    <td style="width: 33.3%;">
+      <img src="https://www.sylviastudio.cn/wp-content/uploads/2026/04/Mozart.png" alt="4-dim framework demo" style="width: 100%; border-radius: 8px;">
+      <br>
+      <b>4-dim case Mozart</b>
     </td>
   </tr>
 </table>
